@@ -1,0 +1,39 @@
+package accounts
+
+// how create a struct
+type CurrentAccount struct {
+	owner         string
+	agency        int
+	accountNumber int
+	balance       float64
+}
+
+// Important to notice that you can use [c *currentAccount] to refer wich account are calling the method
+func (c *CurrentAccount) withdraw(withdrawValue float64) string {
+	canWithdraw := withdrawValue > 0 && c.balance >= withdrawValue
+	if canWithdraw {
+		c.balance -= withdrawValue
+		return "Sucess Withdraw"
+	} else {
+		return "Failed Witthdraw"
+	}
+}
+
+func (c *CurrentAccount) deposit(depositValue float64) (string, float64) {
+	if depositValue > c.balance {
+		c.balance += depositValue
+		return "Sucess Deposit", c.balance
+	} else {
+		return "Failed Deposit", c.balance
+	}
+}
+
+func (c *CurrentAccount) transfer(transferValue float64, tranferAccount *CurrentAccount) bool {
+	if transferValue > 0 && transferValue < c.balance {
+		c.balance -= transferValue
+		tranferAccount.deposit(transferValue)
+		return true
+	} else {
+		return false
+	}
+}
